@@ -1,0 +1,455 @@
+/* ============================================================================
+   Case-study page — app/work/[slug]. Same black stage, big restrained type,
+   generous negative space and section rhythm as the home page. The label-left /
+   prose-right grid echoes the home About section; the accent appears once or
+   twice (live mark, accent diagram nodes), never as a fill.
+
+   No scroll-choreography armer runs on this route, so content is visible by
+   default — nothing is gated behind a reveal transform that wouldn't fire
+   (DESIGN-SYSTEM.md reduced-motion rule #4).
+   ========================================================================= */
+
+.page {
+  position: relative;
+  z-index: var(--z-ui);
+  min-height: 100svh;
+}
+
+/* --- Topbar: monogram home + back-to-work ---------------------------------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-6) var(--gutter);
+  border-bottom: 1px solid var(--border);
+}
+
+.backTop {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 300;
+  text-transform: uppercase;
+  font-size: var(--text-eyebrow);
+  letter-spacing: var(--track-ui);
+  color: var(--muted);
+  transition: color var(--dur-micro) var(--ease-out-quart);
+}
+.backTop:hover,
+.backTop:focus-visible {
+  color: var(--fg);
+}
+
+/* --- Article shell --------------------------------------------------------- */
+.article {
+  max-width: var(--max-content);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* --- HERO ------------------------------------------------------------------ */
+.hero {
+  padding-block: var(--space-32) var(--space-24);
+  max-width: 60rem;
+}
+
+.index {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 300;
+  font-size: var(--text-eyebrow);
+  letter-spacing: var(--track-eyebrow);
+  color: var(--muted-dim);
+  font-variant-numeric: tabular-nums;
+  margin-bottom: var(--space-6);
+}
+/* The accent tick anchoring the index — the chapter-mark voice, reused. */
+.index::before {
+  content: "";
+  display: inline-block;
+  width: var(--space-6);
+  height: 1px;
+  background: var(--accent);
+  vertical-align: middle;
+  margin-right: var(--space-3);
+}
+
+.title {
+  font-size: var(--text-display);
+  letter-spacing: var(--track-display-xl);
+  max-width: 18ch;
+  color: var(--fg);
+}
+
+.thesis {
+  margin-top: var(--space-8);
+  max-width: 46ch;
+  font-size: var(--text-lede);
+  line-height: var(--lh-lede);
+  letter-spacing: var(--track-lede);
+  color: var(--muted);
+}
+
+/* --- Hero proof line (status) ---------------------------------------------- */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-12);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 400;
+  font-size: var(--text-label);
+  text-transform: uppercase;
+  letter-spacing: var(--track-ui-tight);
+  color: var(--fg);
+  max-width: none;
+}
+.statusQuiet {
+  color: var(--muted);
+}
+
+/* The single live mark — matches WorkCard's .liveMark exactly. */
+.liveMark {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 70%, transparent);
+  animation: livePulse 2.4s var(--ease-in-out) infinite;
+  flex: none;
+}
+@keyframes livePulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 55%, transparent);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 7px transparent;
+  }
+}
+/* Honest quiet mark for private/pending — a hollow dim ring, not a live dot. */
+.quietMark {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid var(--muted-dim);
+  flex: none;
+}
+
+/* --- Hero proof links ------------------------------------------------------ */
+.proofLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  margin-top: var(--space-6);
+}
+
+.proofLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 500;
+  font-size: var(--text-label);
+  text-transform: uppercase;
+  letter-spacing: var(--track-ui-tight);
+  color: var(--fg);
+  transition: color var(--dur-micro) var(--ease-out-quart);
+}
+.proofLink:hover,
+.proofLink:focus-visible {
+  color: var(--accent);
+}
+.proofArrow {
+  display: inline-block;
+  transition: transform var(--dur-micro) var(--ease-out-expo);
+}
+.proofLink:hover .proofArrow,
+.proofLink:focus-visible .proofArrow {
+  transform: translateX(4px);
+}
+
+/* Honest marked gap for a null href — not interactive, clearly a TODO. */
+.proofGap {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 400;
+  font-size: var(--text-label);
+  text-transform: uppercase;
+  letter-spacing: var(--track-ui-tight);
+  color: var(--muted);
+  cursor: default;
+}
+.gapTag {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 400;
+  font-size: var(--text-eyebrow);
+  letter-spacing: var(--track-ui-tight);
+  text-transform: none;
+  color: var(--muted-dim);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 2px var(--space-2);
+}
+
+/* --- Sections: label-left, prose-right (echoes home About) ----------------- */
+.section {
+  padding-block: var(--space-24);
+  border-top: 1px solid var(--border);
+}
+
+.sectionGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+}
+
+/* The section label is a real heading (h2) but reads as a hairline chapter
+   marker — small, tracked, uppercase, with the accent tick. */
+.sectionLabel {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 300;
+  text-transform: uppercase;
+  font-size: var(--text-eyebrow);
+  letter-spacing: var(--track-eyebrow);
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  height: max-content;
+}
+.sectionLabel::before {
+  content: "";
+  width: var(--space-6);
+  height: 1px;
+  background: var(--accent);
+  flex: none;
+}
+
+/* --- Prose ----------------------------------------------------------------- */
+.prose {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+.proseP {
+  font-size: var(--text-body);
+  line-height: var(--lh-body);
+  color: var(--fg);
+  max-width: 68ch;
+}
+/* Second and later paragraphs read as supporting — muted, like the card body. */
+.proseP + .proseP {
+  color: var(--muted);
+}
+
+/* --- Architecture figure --------------------------------------------------- */
+.figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+.diagramFrame {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  padding: var(--space-8);
+  overflow-x: auto;
+}
+.figcaption {
+  font-size: var(--text-body);
+  line-height: var(--lh-body);
+  color: var(--muted);
+  max-width: 68ch;
+}
+
+/* --- Decisions ------------------------------------------------------------- */
+.decisions {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  counter-reset: decision;
+}
+.decision {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: 68ch;
+}
+.decisionTitle {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 500;
+  font-size: var(--text-lede);
+  line-height: var(--lh-lede);
+  letter-spacing: var(--track-lede);
+  color: var(--fg);
+}
+.decisionBody {
+  font-size: var(--text-body);
+  line-height: var(--lh-body);
+  color: var(--muted);
+  max-width: 68ch;
+}
+
+/* --- Metrics --------------------------------------------------------------- */
+.metrics {
+  margin-top: var(--space-8);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: var(--space-6);
+}
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-6);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+.metricLabel {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 300;
+  text-transform: uppercase;
+  font-size: var(--text-eyebrow);
+  letter-spacing: var(--track-ui-tight);
+  color: var(--muted);
+}
+.metricValue {
+  font-family: var(--font-display), Impact, sans-serif;
+  text-transform: uppercase;
+  font-size: var(--text-h2);
+  line-height: 1;
+  letter-spacing: var(--track-display);
+  color: var(--fg);
+}
+/* When the value is a TODO gap, the gapTag inside resets the display font. */
+.metricValue .gapTag {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: var(--text-label);
+  letter-spacing: var(--track-ui-tight);
+  vertical-align: middle;
+}
+
+/* --- Footer nav: prev / all / next (clamped, no wrap) ---------------------- */
+.footerNav {
+  max-width: var(--max-content);
+  margin-inline: auto;
+  padding: var(--space-16) var(--gutter);
+  border-top: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.navItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.navItemNext {
+  text-align: right;
+  align-items: flex-end;
+}
+/* Empty clamp slot — holds the grid column so "All work" stays centred. */
+.navItemEmpty {
+  pointer-events: none;
+}
+
+.navDir {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 300;
+  text-transform: uppercase;
+  font-size: var(--text-eyebrow);
+  letter-spacing: var(--track-ui);
+  color: var(--muted);
+}
+.navTitle {
+  font-family: var(--font-display), Impact, sans-serif;
+  text-transform: uppercase;
+  font-size: var(--text-lede);
+  line-height: var(--lh-lede);
+  letter-spacing: var(--track-display);
+  color: var(--fg);
+  transition: color var(--dur-micro) var(--ease-out-quart);
+}
+.navItem:hover .navTitle,
+.navItem:focus-visible .navTitle {
+  color: var(--accent);
+}
+
+.navBack {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 300;
+  text-transform: uppercase;
+  font-size: var(--text-eyebrow);
+  letter-spacing: var(--track-ui);
+  color: var(--muted);
+  white-space: nowrap;
+  transition: color var(--dur-micro) var(--ease-out-quart);
+}
+.navBack:hover,
+.navBack:focus-visible {
+  color: var(--fg);
+}
+
+/* --- Footer ---------------------------------------------------------------- */
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-12) var(--gutter);
+  border-top: 1px solid var(--border);
+}
+.footerNote {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 300;
+  font-size: var(--text-eyebrow);
+  letter-spacing: var(--track-ui-tight);
+  color: var(--muted-dim);
+  max-width: none;
+}
+
+/* --- Desktop: two-column sections + roomier hero --------------------------- */
+@media (min-width: 769px) {
+  .sectionGrid {
+    grid-template-columns: minmax(0, 0.28fr) minmax(0, 0.72fr);
+    gap: var(--space-16);
+    align-items: start;
+  }
+  /* The label column sits at the top of its row; nudge it onto the prose
+     baseline so the tick aligns with the first line of body text. */
+  .sectionLabel {
+    padding-top: 0.35em;
+  }
+}
+
+/* --- Mobile: tighten rhythm, clamp footer nav ------------------------------ */
+@media (max-width: 768px) {
+  .title {
+    max-width: 100%;
+  }
+  .section {
+    padding-block: var(--space-16);
+  }
+  .footerNav {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6) var(--space-8);
+  }
+  /* "All work" drops to its own full-width row, centred, between prev/next. */
+  .navBack {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    text-align: center;
+    justify-self: center;
+  }
+}
