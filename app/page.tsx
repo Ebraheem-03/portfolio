@@ -3,6 +3,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { WorkCard } from "@/components/WorkCard";
 import { ContactForm } from "@/components/ContactForm";
 import { SocialLinks } from "@/components/SocialLinks";
+import { HeroExperience } from "@/components/HeroExperience";
 import { WORK } from "@/lib/work";
 import styles from "./page.module.css";
 
@@ -26,7 +27,9 @@ export default function Home() {
             The radial accent below is the STATIC FALLBACK (also the
             reduced-motion / no-WebGL poster) — replace or layer over it.
           */}
-          <div className={styles.stage} data-canvas-mount aria-hidden="true" />
+          <div className={styles.stage} data-canvas-mount aria-hidden="true">
+            <HeroExperience />
+          </div>
 
           <div className={styles.heroInner}>
             <p className={styles.heroMark}>Ebraheem Gillani · AI Engineer</p>

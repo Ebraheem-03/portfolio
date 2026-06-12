@@ -3,7 +3,7 @@
 Heartbeat doc. Every agent updates this after a unit of work.
 Tags: `[AFK]` safe unattended · `[REVIEW]` needs the human.
 
-## Now (current phase: 2 — static shell & content scaffold)
+## Now (current phase: 3 — WebGL hero & signature moment — DONE; awaiting Phase 4)
 
 ### Phase 2 TODO(human) — fill the real artifacts  [REVIEW]
 These are the marked gaps left in the content scaffold. The copy around them is real and
@@ -64,11 +64,55 @@ marked gap). Each is a `TODO(human)` in code:
 - (none — Phase 2 deliverables complete pending the TODO(human) artifacts above)
 
 ### Up next  [AFK]
-- [ ] Phase 3 (helios): WebGL hero & signature moment. The static hero frame is built and ships a
-      clearly-labelled canvas mount slot — `app/page.tsx` › `.stage` div, marked
-      `data-canvas-mount`, positioned `inset:0; z-index:var(--z-canvas)`, BEHIND the white overlay
-      (`--z-ui`). The current radial-accent gradient in `.stage` IS the static / reduced-motion /
-      no-WebGL poster — layer the R3F canvas over it or replace it. Z-depth tokens already wired.
+- [ ] Phase 4 (helios + iris): scroll choreography. Sync the in-canvas loop / camera to Lenis
+      scroll progress (the `progress` ref in `HeroScene` is already the single source of truth for
+      the loop head — Phase 4 can drive it from scroll instead of/in addition to the wall clock).
+      Stagger + parallax + section transitions.
+
+## Done — Phase 3 WebGL hero & signature moment (helios, 2026-06-12)  [AFK]
+**The signature moment = a literal agent reasoning/acting loop.** Four stage-clusters
+(INTENT → REASONING → ACTION → OUTCOME) on a tilted ellipse; each cluster = a hub node + 3–4
+satellite sub-steps (tool-calls/thoughts). A signal pulse travels the hub→hub spine connectors;
+nodes ignite in sequence as the agent "thinks" then "acts," the loop closes and resumes (~9s).
+Idle is alive (shimmer on the wiring, breathing nodes, lazy drift + soft pointer parallax).
+Emissive cyan `#23E6C4` + additive blending + a Bloom pass over matte black. Parked in the open
+right/upper field so it never fights the left-parked headline. NOT decorative geometry — it reads
+as the brand thesis ("agents that take actions") made visible.
+
+- [x] **Stack (per ADRs 0001/0002).** Added `three@0.171`, `@react-three/fiber@9`,
+      `@react-three/drei@10`, `@react-three/postprocessing@3` (+ `@types/three`). R3F 9 / drei 10
+      are the React-19-compatible majors — do not downgrade. Raw GLSL for the connector flow +
+      node glow (inline template strings, no shader-loader — per Phase-0 gotcha).
+- [x] **Files added** (all under `components/`):
+      `hero/agentGraph.ts` (seeded/deterministic topology — same layout on SSR, still-frame,
+      swiftshader shot, and GPU), `hero/Connectors.tsx` (one additive `LineSegments` draw call;
+      GLSL maps spine edges onto the loop so the signal flows), `hero/Nodes.tsx` (one InstancedMesh,
+      billboard radial-glow discs, per-stage ignition), `hero/HeroScene.tsx` (loop clock + drift +
+      Bloom), `hero/HeroCanvas.tsx` (the `<Canvas>`, ACES tone-map, transparent clear so the poster
+      shows through), `HeroExperience.tsx` (the guard layer + dynamic import). Mounted in
+      `app/page.tsx` inside the `.stage` div. No design-system tokens invented; accent + z-order
+      reused as locked.
+- [x] **Three fallbacks verified** (screenshots in `scripts/ingestion/app-shots/`):
+      (1) **No-WebGL** → `detectWebGL()` fails, `HeroExperience` renders nothing, the existing
+      radial-gradient poster shows — layout intact (`hero-no-webgl.png`).
+      (2) **Reduced-motion** → canvas mounts in STILL mode (`frameloop="demand"`, loop parked
+      mid-ACTION at phase 0.42), renders ONE frame, no animation (`hero-reduced-motion.png`).
+      (3) **Phone-class (narrow + coarse pointer)** → poster only, no canvas, to protect mobile LCP
+      (`hero-mobile.png`). Tablet/low-mem → animated but `quality:"low"` (lower DPR, softer bloom).
+- [x] **Perf / bundle.** The heavy three/R3F/postprocessing chunk is code-split: ~1.0 MB raw /
+      **~309 KB gzipped**, and **0 references in the initial page HTML** — it is fetched only after
+      the client decides to mount the canvas (`dynamic(ssr:false)` + a deferred rAF so the headline
+      paints first). Initial framework+app payload (three EXCLUDED) ≈ **156 KB gzipped**. One scene,
+      two draw calls (lines + instanced nodes) + the bloom pass; DPR capped (1.75 desktop / 1.25
+      mobile); `antialias:false` (bloom hides it). LCP is never blocked by WebGL.
+- [x] **Verified.** `npm run build` passes clean (Turbopack, TypeScript pass green, all routes
+      static). Live hero confirmed via `node scripts/ingestion/shot-app.mjs`: canvas composites
+      BEHIND the legible white overlay; the graph clearly reads as the agent loop.
+- **GPU vs. software-screenshot caveat:** the swiftshader shots are dim, aliased, and show NO real
+  bloom — the bright node cores are visible but not yet smeared into volumetric glow. On a real GPU
+  the Bloom pass turns those cores into the cinematic lit-from-within cyan halo the design calls
+  for. Structure/composition/legibility are confirmed; **final glow intensity wants one human eye
+  on real hardware** (tune `Bloom intensity/radius` in `HeroScene.tsx` if it blooms too hot/soft).
 
 ## Done — Phase 2 static shell & content scaffold (iris, 2026-06-12)  [AFK]
 - [x] **Nav refined + mobile treatment.** `SiteHeader` is now a client component: desktop inline
