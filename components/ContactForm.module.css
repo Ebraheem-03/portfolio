@@ -154,7 +154,11 @@
 }
 .input:focus-visible,
 .textarea:focus-visible {
-  outline: none;
+  /* Focus must not signal by color alone (WCAG 2.4.11 / 1.4.11). A real 2px
+     accent ring — site focus language — carries it; the border + bg shift are
+     secondary. Inset offset keeps the ring framing the field, not haloing it. */
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
   border-color: var(--accent);
   background: rgba(255, 255, 255, 0.05);
 }
