@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 120" width="560" height="120" role="img" aria-label="Ebraheem-03 handle logotype (unused direction)">
+  <!--
+    DIRECTION 3: HANDLE / LOGOTYPE — NOT SELECTED.
+    Primary mark is the EG monogram (direction 02), locked 2026-06-11.
+    The engineer-signature lane: the hairline UI face (Space Grotesk 300, wide
+    tracked, lowercase) set as a handle, with a terminal cursor accent block.
+    The invented "ebraheem.builds" handle has been DROPPED; shown here with the
+    confirmed GitHub handle (Ebraheem-03) for reference only. LinkedIn URL is
+    still TODO(linkedin) per docs/BRAND.md — do not invent one.
+  -->
+  <rect width="560" height="120" fill="#000000"/>
+  <text x="40" y="72" font-family="'Space Grotesk', system-ui, sans-serif"
+        font-weight="300" font-size="40" letter-spacing="2" fill="#FFFFFF">Ebraheem-03</text>
+  <rect x="372" y="44" width="16" height="34" fill="#23E6C4"/>
+</svg>

@@ -1,0 +1,48 @@
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--fg);
+  transition: opacity var(--dur-micro) var(--ease-out-quart);
+}
+a.wordmark:hover {
+  opacity: 0.7;
+}
+
+/* The monogram SVG. Sized in the nav (small) and scales cleanly to a hero mark
+   by overriding --mark-size on the wrapper. Glyphs inherit currentColor. */
+.mark {
+  width: var(--mark-size, 1.75rem);
+  height: var(--mark-size, 1.75rem);
+  flex: none;
+  overflow: visible;
+}
+
+.glyphPath {
+  fill: currentColor;
+}
+
+/* The one accent — node + connector. */
+.node {
+  fill: var(--accent);
+}
+.connector {
+  stroke: var(--accent);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+/* Full name — hairline UI, wide-tracked. The counter-tension, footer only. */
+.full {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 300;
+  text-transform: uppercase;
+  font-size: var(--text-eyebrow);
+  letter-spacing: var(--track-ui);
+  line-height: 1;
+  color: var(--muted);
+}
+
+.footer .mark {
+  --mark-size: 1.5rem;
+}

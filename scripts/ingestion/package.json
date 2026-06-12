@@ -1,0 +1,13 @@
+{
+  "name": "reference-ingestion",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Phase-0 reference ingestion: drives cached Chromium to study the Resn reference. Throwaway-but-reproducible.",
+  "scripts": {
+    "capture": "node capture.mjs"
+  },
+  "dependencies": {
+    "playwright-core": "^1.49.0"
+  }
+}

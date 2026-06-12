@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Wordmark directions — [REVIEW]</title>
+<style>
+  @font-face {
+    font-family: "Anton";
+    src: url("../../app/fonts/anton-400.woff2") format("woff2");
+    font-weight: 400; font-display: swap;
+  }
+  @font-face {
+    font-family: "Space Grotesk";
+    src: url("../../app/fonts/space-grotesk-300.woff2") format("woff2");
+    font-weight: 300; font-display: swap;
+  }
+  * { margin: 0; box-sizing: border-box; }
+  body {
+    background: #000; color: #fff;
+    font-family: "Space Grotesk", system-ui, sans-serif; font-weight: 300;
+    padding: 64px; display: flex; flex-direction: column; gap: 72px;
+  }
+  .label {
+    text-transform: uppercase; letter-spacing: 0.2em; font-size: 12px;
+    color: #8a8a8a; margin-bottom: 24px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .label::before { content: ""; width: 24px; height: 1px; background: #23e6c4; }
+  /* Render marks live with the real fonts so the preview is accurate. */
+  .mark { line-height: 0; }
+  .ctx {
+    margin-top: 28px; display: flex; align-items: baseline; gap: 20px;
+    border-top: 1px solid rgba(255,255,255,0.12); padding-top: 20px;
+  }
+  .ctx .display {
+    font-family: "Anton", Impact, sans-serif; text-transform: uppercase;
+    font-size: 40px; letter-spacing: -0.02em;
+  }
+  .ctx small { color:#5a5a5a; text-transform:uppercase; letter-spacing:0.16em; font-size:11px; }
+</style>
+</head>
+<body>
+  <div>
+    <p class="label">01 · Full-name wordmark</p>
+    <img class="mark" src="01-fullname-wordmark.svg" width="540" alt="full name wordmark" />
+    <div class="ctx"><span class="display">Selected work</span><small>beside the display face</small></div>
+  </div>
+  <div>
+    <p class="label">02 · EG monogram</p>
+    <img class="mark" src="02-eg-monogram.svg" width="180" alt="EG monogram" />
+    <div class="ctx"><span class="display">Selected work</span><small>compact / favicon / nav</small></div>
+  </div>
+  <div>
+    <p class="label">03 · Handle logotype</p>
+    <img class="mark" src="03-handle-logotype.svg" width="460" alt="handle logotype" />
+    <div class="ctx"><span class="display">Selected work</span><small>engineer signature lane</small></div>
+  </div>
+</body>
+</html>

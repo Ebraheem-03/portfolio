@@ -1,0 +1,286 @@
+/* ============================================================================
+   ContactForm — accessible, restrained. Inputs are hairline-bordered fields on
+   the black stage, accent only on focus. No card chrome, no fake success state.
+   ========================================================================= */
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  max-width: 44rem;
+}
+
+/* --- Framing fork ---------------------------------------------------------- */
+.fork {
+  border: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.forkLegend {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 300;
+  text-transform: uppercase;
+  font-size: var(--text-eyebrow);
+  letter-spacing: var(--track-ui);
+  color: var(--muted);
+  margin-bottom: var(--space-4);
+}
+
+.forkOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.forkOption {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 400;
+  font-size: var(--text-label);
+  text-transform: uppercase;
+  letter-spacing: var(--track-ui-tight);
+  color: var(--muted);
+  padding: var(--space-3) var(--space-6);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition:
+    color var(--dur-micro) var(--ease-out-quart),
+    border-color var(--dur-micro) var(--ease-out-quart);
+}
+.forkOption:hover {
+  color: var(--fg);
+  border-color: var(--border-strong);
+}
+.forkOptionActive {
+  color: var(--bg);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.forkOptionActive:hover {
+  color: var(--bg);
+}
+
+/* Visually-hidden native radio; the label is the control. Focus shows on it. */
+.forkInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.forkInput:focus-visible + span {
+  outline: 2px solid var(--accent);
+  outline-offset: 6px;
+  border-radius: 1px;
+}
+
+.forkLead {
+  font-size: var(--text-lede);
+  line-height: var(--lh-lede);
+  letter-spacing: var(--track-lede);
+  color: var(--fg);
+  max-width: 32ch;
+}
+
+/* --- Form ------------------------------------------------------------------ */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.row {
+  display: flex;
+  gap: var(--space-6);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  flex: 1;
+  min-width: 0;
+}
+
+.label {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 300;
+  text-transform: uppercase;
+  font-size: var(--text-eyebrow);
+  letter-spacing: var(--track-ui);
+  color: var(--muted);
+}
+
+.input,
+.textarea {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 400;
+  font-size: var(--text-body);
+  line-height: var(--lh-body);
+  color: var(--fg);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-4);
+  width: 100%;
+  transition:
+    border-color var(--dur-micro) var(--ease-out-quart),
+    background-color var(--dur-micro) var(--ease-out-quart);
+}
+.input {
+  height: 3.25rem;
+}
+.textarea {
+  resize: vertical;
+  min-height: 8rem;
+}
+.input::placeholder,
+.textarea::placeholder {
+  /* Placeholder must hit body-contrast; --muted is ~4.6:1 on black (AA). */
+  color: var(--muted);
+  opacity: 1;
+}
+.input:hover,
+.textarea:hover {
+  border-color: var(--border-strong);
+}
+.input:focus-visible,
+.textarea:focus-visible {
+  /* Focus must not signal by color alone (WCAG 2.4.11 / 1.4.11). A real 2px
+     accent ring — site focus language — carries it; the border + bg shift are
+     secondary. Inset offset keeps the ring framing the field, not haloing it. */
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.hint {
+  font-size: var(--text-label);
+  line-height: var(--lh-body);
+  color: var(--muted);
+  max-width: 48ch;
+}
+
+/* --- Submit ---------------------------------------------------------------- */
+.submit {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 500;
+  font-size: var(--text-label);
+  text-transform: uppercase;
+  letter-spacing: var(--track-ui-tight);
+  color: var(--bg);
+  background: var(--fg);
+  border: 1px solid var(--fg);
+  border-radius: var(--radius-sm);
+  padding: var(--space-4) var(--space-8);
+  cursor: pointer;
+  transition:
+    background-color var(--dur-micro) var(--ease-out-quart),
+    color var(--dur-micro) var(--ease-out-quart),
+    border-color var(--dur-micro) var(--ease-out-quart);
+}
+.submit:hover,
+.submit:focus-visible {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+}
+.submitArrow {
+  display: inline-block;
+  transition: transform var(--dur-micro) var(--ease-out-expo);
+}
+.submit:hover .submitArrow,
+.submit:focus-visible .submitArrow {
+  transform: translateX(4px);
+}
+
+/* --- Completed state (no fake "sent") -------------------------------------- */
+.done {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-6);
+  padding: var(--space-12);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+.doneTitle {
+  font-size: var(--text-h2);
+  color: var(--fg);
+}
+.doneBody {
+  font-size: var(--text-body);
+  line-height: var(--lh-body);
+  color: var(--muted);
+  max-width: 46ch;
+}
+.reset {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 500;
+  font-size: var(--text-label);
+  text-transform: uppercase;
+  letter-spacing: var(--track-ui-tight);
+  color: var(--fg);
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-bottom: 1px solid var(--accent);
+  padding-bottom: var(--space-1);
+  transition: color var(--dur-micro) var(--ease-out-quart);
+}
+.reset:hover,
+.reset:focus-visible {
+  color: var(--accent);
+}
+
+/* Honeypot — off-screen + out of tab order; not display:none so bots that skip
+   hidden fields still fill it. Real users never see or reach it. */
+.honeypot {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.submit:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+.submit:disabled:hover {
+  background: var(--fg);
+  border-color: var(--fg);
+  color: var(--bg);
+}
+
+.error {
+  margin: 0;
+  min-height: 1.2em;
+  color: var(--danger);
+  font-size: var(--text-label);
+}
+
+@media (max-width: 768px) {
+  .row {
+    flex-direction: column;
+  }
+  .done {
+    padding: var(--space-8);
+  }
+}
