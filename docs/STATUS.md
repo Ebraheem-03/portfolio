@@ -3,13 +3,32 @@
 Heartbeat doc. Every agent updates this after a unit of work.
 Tags: `[AFK]` safe unattended · `[REVIEW]` needs the human.
 
-## Now (current phase: 1 — design system & shell)
+## Now (current phase: 2 — static shell & content scaffold)
 
-### Blocked / needs human  [REVIEW]
-- [ ] **LinkedIn URL.** Still `TODO(linkedin)` — not yet provided. Display name (Ebraheem Gillani)
-      and GitHub (`Ebraheem-03`, github.com/Ebraheem-03) are confirmed and recorded as canonical in
-      `docs/BRAND.md` › Identity. The invented `ebraheem.builds` handle has been dropped. Phase 2
-      contact/footer must keep the `TODO(linkedin)` marker — do not invent a URL.
+### Phase 2 TODO(human) — fill the real artifacts  [REVIEW]
+These are the marked gaps left in the content scaffold. The copy around them is real and
+voice-correct; only the artifacts are placeholders (a fabricated link/metric is worse than a
+marked gap). Each is a `TODO(human)` in code:
+- [ ] **Resume Analyzer — live URL.** `lib/work.ts` › `resume-analyzer` link `href` is `null`,
+      rendering as an "OPEN THE LIVE APP · soon" pending mark. Drop in the exact Hugging Face
+      Spaces URL to make it a real live link (it gets the accent live-mark).
+- [ ] **Agentic e-commerce — proof link.** `lib/work.ts` › `agentic-commerce`: no public
+      deploy/repo confirmed. Add a repo/demo URL, or leave as the Phase-5 case-study route.
+- [ ] **MD ministry platform — proof link.** `lib/work.ts` › `ministry-platform`: likely no
+      public link (client/gov work). Confirm whether anything is shareable; otherwise it stays a
+      Phase-5 case-study container with no external link (that's honest, not a gap).
+- [ ] **Contact email.** `components/SocialLinks.tsx` uses `ebraheemgillani1@gmail.com` (the
+      project owner's known address) as the exposed contact `mailto:`. Confirm this is the public
+      address to ship, or swap it.
+- [ ] **No metrics fabricated.** Case-study copy deliberately carries zero invented numbers. If you
+      have real metrics (latency, accuracy, scale), they can be added to the architecture notes.
+
+### Resolved since Phase 1
+- [x] **LinkedIn URL confirmed** (2026-06-12): `https://www.linkedin.com/in/ebraheemgillani/`,
+      recorded canonical in `docs/BRAND.md` › Identity. Wired into the Phase 2 contact social links.
+      The old `TODO(linkedin)` marker is retired — no invented URL ever shipped.
+
+### Still open from Phase 1  [REVIEW]
 - [ ] **Confirm the font pairing.** Display = **Anton** (OFL), Body/UI = **Space Grotesk** (OFL),
       both self-hosted via `next/font/local` (files in `app/fonts/`). Open-license replacements
       for the reference's commercial Manifold/Gilroy, same heavy-condensed-vs-hairline tension.
@@ -42,12 +61,50 @@ Tags: `[AFK]` safe unattended · `[REVIEW]` needs the human.
       in package.json. Note: Next 16 Turbopack build output no longer prints per-route byte sizes.
 
 ### In progress
-- (none — Phase 1 deliverables complete pending the reviews above)
+- (none — Phase 2 deliverables complete pending the TODO(human) artifacts above)
 
 ### Up next  [AFK]
-- [ ] Phase 2 (iris): static shell & content scaffold — real copy, selected-work grid, about,
-      contact. Frame already stubbed in `app/page.tsx`. Accent + wordmark are now LOCKED, so this
-      is unblocked. Any GitHub link uses `Ebraheem-03`; keep `TODO(linkedin)` until the URL lands.
+- [ ] Phase 3 (helios): WebGL hero & signature moment. The static hero frame is built and ships a
+      clearly-labelled canvas mount slot — `app/page.tsx` › `.stage` div, marked
+      `data-canvas-mount`, positioned `inset:0; z-index:var(--z-canvas)`, BEHIND the white overlay
+      (`--z-ui`). The current radial-accent gradient in `.stage` IS the static / reduced-motion /
+      no-WebGL poster — layer the R3F canvas over it or replace it. Z-depth tokens already wired.
+
+## Done — Phase 2 static shell & content scaffold (iris, 2026-06-12)  [AFK]
+- [x] **Nav refined + mobile treatment.** `SiteHeader` is now a client component: desktop inline
+      nav unchanged (accent underline on hover/focus); < 768px gets an accessible disclosure menu
+      (real `<button>` with `aria-expanded`/`aria-controls`, labelled panel, Escape + outside-click
+      close with focus return, links close the panel). Desktop nav stays in the DOM at all sizes
+      (no JS-gated content). Mobile panel links render large in Anton.
+- [x] **Hero — static content frame, Phase-3-ready.** Black stage + accent vignette fallback,
+      hairline name/role mark, ALL-CAPS Anton BRAND-voice headline ("I build agents that take
+      actions…"), one-line subhead, accent scroll cue. The canvas mount slot is the `.stage` div
+      (`data-canvas-mount`) at `--z-canvas` behind the `--z-ui` overlay. Static state already reads
+      like the bar — verified at 390/768/1440/1920.
+- [x] **Selected work grid — 3 proof-first case-study containers.** New `components/WorkCard.tsx`
+      + `lib/work.ts` (data). Each card: ordered index, Anton title, Problem (one line), tight
+      Architecture note, stack chips, and a proof slot. NOT a generic icon-card — structure carries
+      the argument. Live links use an accent live-mark (pulsing dot, killed under reduced-motion);
+      unconfirmed links render as an honest "soon" pending mark, never a dead/fabricated link.
+      Responsive `auto-fit` grid (3-up desktop → 1-up mobile).
+- [x] **About — concise, proof-first, dry.** Two-column at desktop (Anton "THE WORK ARGUES FOR
+      ITSELF." parked left, prose right). Names the three artifacts; never asserts seniority; no
+      "passionate about AI" filler. Stacks on mobile.
+- [x] **Contact — accessible form + framing fork + socials.** New `components/ContactForm.tsx`:
+      one form, two framings (hiring vs. project radiogroup) that change copy/intent only, same
+      fields, same destination — NOT two pages. Real labels, required states, aria-describedhint,
+      aria-live framing lead + completion state. Submit is a clearly-marked **no-op stub for Phase
+      6** (no fake "sent" toast; the completed state says the inbox lands next phase).
+      `components/SocialLinks.tsx`: GitHub `Ebraheem-03` + LinkedIn (confirmed) + email, all real.
+- [x] **Token discipline.** One new token group added to `DESIGN-SYSTEM.md` FIRST then `globals.css`:
+      `--radius-sm: 2px` / `--radius-md: 4px` (near-square, no pills). No ad-hoc colors/sizes/easings
+      in components — all reference the locked tokens.
+- [x] **Verified.** `npm run build` passes clean (Turbopack, all routes static). `npm run dev` →
+      `/` 200. WCAG AA: focus-visible everywhere, keyboard paths (menu, form, fork), reduced-motion
+      kills the live-mark pulse + heavy transforms, placeholder text at `--muted` (~4.6:1 AA). No
+      em dashes in shipped copy. Visual pass at all 4 breakpoints via headless Chrome.
+      **Note:** no Framer Motion added — Phase 2 stays structural/restrained per the plan; component
+      motion is CSS-only (hover/focus, reduced-motion-safe). Heavy scroll choreography is Phase 4.
 
 ## Done
 - [x] **Phase 0 reference ingestion (helios)** — signed off, grammar in `docs/design-analysis.md`.

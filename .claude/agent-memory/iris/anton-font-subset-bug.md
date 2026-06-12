@@ -1,26 +1,24 @@
 ---
 name: anton-font-subset-bug
-description: The vendored Anton woff2 is a Vietnamese subset missing basic Latin A–Z, so Anton-set headlines silently fall back to Impact.
+description: RESOLVED — the vendored Anton woff2 now has full Latin A–Z; headlines render in real Anton, not the Impact fallback.
 metadata:
   type: project
 ---
 
-`app/fonts/anton-400.woff2` (the display face, `--font-display`) is a **Vietnamese subset** whose
-cmap does NOT contain basic Latin A–Z (only space + Vietnamese-accented glyphs). Confirmed via
-fontTools: `getBestCmap()` has 115 entries, `E`/`G` (and all plain caps) absent.
+**RESOLVED as of 2026-06-12 (Phase 2 verification).** `app/fonts/anton-400.woff2` now contains the
+full basic Latin A–Z. Confirmed via fontTools: `getBestCmap()` has all 26 uppercase letters; the
+file is ~18.6 KB. Anton-set headlines (`.display`, hero, section titles, work-card titles, the
+mobile menu, the social-link labels) render in the intended ultra-condensed Anton voice — verified
+visually in headless-Chrome captures (the condensed grotesque is unmistakably Anton, not Impact).
 
-**Consequence:** every Anton-set headline (`.display`, hero, section titles) silently falls back to
-the `Impact` fallback for Latin text. The intended ultra-condensed Anton voice is NOT actually
-rendering for normal copy. This is latent — the build is green and it looks "a font" so it's easy
-to miss.
+History: during Phase 1 the vendored woff2 was a Vietnamese subset missing Latin A–Z, so headlines
+silently fell back to `Impact`. That subset has since been swapped for a Latin-bearing Anton woff2.
+The `docs/STATUS.md` Phase-1 note flagging the subset bug is now stale — the swap happened.
 
-The EG monogram does NOT depend on this: its glyph geometry was baked to vector paths (extracted
-from the full Latin Anton-Regular.ttf, not the vendored subset), so the mark renders correctly
-regardless.
+The EG monogram never depended on the font either way: its geometry is baked to vector paths in
+`components/Wordmark.tsx`.
 
-**Why:** flagged during the Phase-1 review work (2026-06-12) while converting the monogram to paths.
-Out of scope for that task, so it's a tracked finding in `docs/STATUS.md`, not yet fixed.
-**How to apply:** before relying on Anton for any visible Latin copy, swap in a Latin (or full)
-Anton woff2. To verify a font subset has the glyphs you need: load it with fontTools
-(`pip install brotli` first for woff2) and check `TTFont(path).getBestCmap()` contains the codepoints.
-Related: [[brand-identity]].
+**Why this matters going forward:** if Anton headlines ever look like plain Impact again, suspect a
+woff2 regression first. **How to verify a font subset has the glyphs you need:** load it with
+fontTools (`pip install brotli` for woff2) and check `TTFont(path).getBestCmap()` contains the
+codepoints. Related: [[brand-identity]], [[verifying-ui-visually]].

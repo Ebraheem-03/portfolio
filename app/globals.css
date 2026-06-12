@@ -66,6 +66,10 @@
   --max-content: 1440px;
   --gutter: clamp(1.25rem, 5vw, 6rem);
 
+  /* --- Radius (Phase 2) — near-square, mechanical. No pills. --------------- */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+
   /* --- Depth (WebGL z-order) ---------------------------------------------- */
   --z-canvas: 0;
   --z-parallax: 10;

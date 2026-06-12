@@ -165,6 +165,14 @@ Section vertical rhythm is generous (the reference is mostly negative space): se
 - Grid: 12-column where needed (`--max-content`, gutter `--space-6`). Most layout is flexbox 1D
   (impeccable: Grid only for true 2D). Selected-work is the one genuine grid.
 
+### Radius (added Phase 2 — iris)
+Near-square, mechanical. The stage is hard-edged; corners are a hairline softening, never pill-soft.
+| Token        | Value     | Use |
+|--------------|-----------|-----|
+| `--radius-sm`| `2px`     | Inputs, chips, the live-mark dot's hit area, focus-clip. |
+| `--radius-md`| `4px`     | Work-card / panel containers — the largest radius on the UI layer. |
+Nothing larger ships on the UI layer. Rounded-pill shapes are banned (reads SaaS-template).
+
 ### Breakpoints (match the 4 captured viewports)
 | Token      | px    | Captured viewport |
 |------------|-------|-------------------|
