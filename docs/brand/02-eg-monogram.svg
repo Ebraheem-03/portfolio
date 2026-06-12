@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240" role="img" aria-label="EG monogram, Ebraheem Gillani">
+  <!--
+    DIRECTION 2: EG MONOGRAM
+    A compact square mark for favicon / nav / avatar use. Two condensed letters
+    set tight; an accent node + connector sits on the baseline so the mark
+    literally contains a node-and-connector, the agent-graph motif at glyph
+    scale. Reads from 24px (nav) up to a hero badge. The one accent is the node.
+  -->
+  <rect width="240" height="240" fill="#000000"/>
+  <rect x="0.5" y="0.5" width="239" height="239" fill="none" stroke="#FFFFFF" stroke-opacity="0.12"/>
+  <text x="120" y="168" text-anchor="middle" font-family="Anton, Impact, sans-serif"
+        font-size="150" letter-spacing="-6" fill="#FFFFFF">EG</text>
+  <line x1="120" y1="186" x2="160" y2="186" stroke="#23E6C4" stroke-width="4"/>
+  <circle cx="160" cy="186" r="6" fill="#23E6C4"/>
+</svg>
