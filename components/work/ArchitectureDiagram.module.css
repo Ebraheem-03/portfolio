@@ -1,0 +1,86 @@
+/* ============================================================================
+   ArchitectureDiagram — the agent-graph motif at section scale. Hairline
+   strokes on the black stage, monospace-free UI labels (Space Grotesk 300,
+   tracked), one accent for the "smart" nodes. Pure SVG, fluid width.
+   ========================================================================= */
+
+.svg {
+  width: 100%;
+  height: auto;
+  /* The SVG scales to fit; cap the rendered size so it doesn't balloon on
+     wide viewports — the graph is restrained, not a hero. */
+  max-width: 56rem;
+  overflow: visible;
+}
+
+/* --- Nodes ----------------------------------------------------------------- */
+.node {
+  fill: var(--surface);
+  stroke: var(--border);
+  stroke-width: 1;
+}
+.nodeAccent {
+  fill: color-mix(in oklab, var(--accent) 7%, transparent);
+  stroke: color-mix(in oklab, var(--accent) 55%, transparent);
+  stroke-width: 1;
+}
+
+/* The accent node's connector dot — the monogram's node-and-connector echo. */
+.nodeDot {
+  fill: var(--accent);
+}
+
+/* Node labels — hairline tracked UI, the deliberate counter-tension to mass. */
+.nodeLabel,
+.nodeLabelAccent {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 300;
+  /* SVG ignores rem-on-root scaling the way HTML does; fixed px reads correctly
+     against the viewBox geometry and stays legible when the SVG scales. */
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+.nodeLabel {
+  fill: var(--fg);
+}
+.nodeLabelAccent {
+  fill: var(--accent);
+}
+
+/* --- Edges ----------------------------------------------------------------- */
+.edge {
+  stroke: var(--border-strong);
+  stroke-width: 1;
+  fill: none;
+}
+.edgeAccent {
+  stroke: color-mix(in oklab, var(--accent) 60%, transparent);
+  stroke-width: 1;
+  fill: none;
+}
+
+.arrowHead {
+  fill: var(--border-strong);
+}
+.arrowHeadAccent {
+  fill: color-mix(in oklab, var(--accent) 75%, transparent);
+}
+
+/* Edge labels — tiny tracked uppercase, the "tool result" annotations. */
+.edgeLabel {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 300;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  fill: var(--muted);
+}
+
+/* Contrast backing behind an edge label: fills with the stage background so the
+   label is always legible, even where its edge crosses a node or another line.
+   A faint hairline edge keeps it reading as an annotation chip, not a hole. */
+.edgeLabelBacking {
+  fill: var(--bg);
+  stroke: var(--border);
+  stroke-width: 0.5;
+}

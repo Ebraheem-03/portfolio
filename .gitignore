@@ -11,7 +11,8 @@ dist/
 
 # Next.js auto-generated
 next-env.d.ts
+*.tsbuildinfo
 
-# reference-ingestion outputs: large + reproducible from scripts/ingestion/*.mjs
+# screenshot/verification outputs: large + reproducible from scripts/ingestion/*.mjs
 scripts/ingestion/out/
-scripts/ingestion/app-shots/
+scripts/ingestion/*-shots/

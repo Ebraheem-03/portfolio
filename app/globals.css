@@ -12,6 +12,8 @@
   --border: rgba(255, 255, 255, 0.12);
   --border-strong: rgba(255, 255, 255, 0.24);
   --surface: rgba(255, 255, 255, 0.03);
+  /* Danger — form/error states only. Desaturated coral, ~5.4:1 on black (AA). */
+  --danger: #ff8a7a;
 
   /* --- Accent — LOCKED 2026-06-11 ---------------------------------------- */
   /* Electric cyan/teal. The one accent: focus ring, link underline, the live  */
@@ -190,6 +192,28 @@ a {
 }
 .skip-link:focus-visible {
   transform: translateY(0);
+}
+
+/* ============================================================================
+   Scroll choreography — reveal initial states (Phase 4, helios).
+
+   Hidden state is applied ONLY when JS has confirmed motion is on and armed the
+   triggers (<html data-choreo="armed">). With no-JS, reduced-motion, or before
+   the script runs, [data-reveal] is fully visible — content is never gated
+   behind a transform that might not fire (DESIGN-SYSTEM.md reduced-motion rule
+   #4, also protects SSR/headless). GSAP animates transform+opacity only, so
+   reveals never shift layout (CLS ~ 0).
+   ========================================================================= */
+html[data-choreo="armed"] [data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+  will-change: transform, opacity;
+}
+/* Work cards enter from a touch deeper for a layered, parallaxed feel. */
+html[data-choreo="armed"] [data-work-grid] > * {
+  opacity: 0;
+  transform: translate3d(0, 40px, 0);
+  will-change: transform, opacity;
 }
 
 /* ============================================================================
