@@ -25,6 +25,7 @@ below exist only for structural UI (borders, muted labels, disabled states), nev
 | `--border`       | `rgba(255,255,255,0.12)` | Hairline rules, section dividers, input borders at rest. |
 | `--border-strong`| `rgba(255,255,255,0.24)` | Hover/focus border, active dividers. |
 | `--surface`      | `rgba(255,255,255,0.03)` | The ONLY fill allowed on the UI layer — barely-there panel lift for cards/inputs. Use sparingly. |
+| `--danger`       | `#FF8A7A`   | Form/error states ONLY (added Phase 6). Desaturated coral, ~5.4:1 on black (AA). Never decorative — the accent stays cyan. |
 
 **Contrast notes (impeccable / WCAG AA):**
 - `--fg` on `--bg`: 21:1. `--muted` on `--bg`: ~4.6:1 (AA normal text). `--muted-dim`: decorative only.

@@ -5,6 +5,78 @@ Tags: `[AFK]` safe unattended · `[REVIEW]` needs the human.
 
 ## Now (current phase: 4 — scroll choreography — DONE; awaiting Phase 5)
 
+## Perf/QA — early pass (vesper, 2026-06-12)  [REVIEW]
+Production build (`next build`, Turbopack) + `next start -p 3100`, measured with playwright-core
+driving the cached Chromium. **Environment caveat:** Lighthouse and `curl` could not run (the
+sandbox blocks outbound localhost network for those tools); fell back to Playwright PerformanceObserver
++ on-disk gzip sizing. WebGL renders via **swiftshader (software)** headless, so all paint/GPU timing
+is unreliable — numbers below lean on network/DOM/CLS/JS, which ARE reliable.
+
+### Headline numbers (hard, gzip from `.next/static`)
+| Metric | Measured | Budget | Verdict |
+|---|---|---|---|
+| Initial first-load JS (the 10 scripts referenced in raw `/` HTML, three EXCLUDED) | **233.5 KB gz / 751.7 KB raw** | "lean initial JS" | ⚠️ over the Phase-3 claim |
+| Lazy WebGL chunk (`2v3kn85onf7u0.js`, three+R3F+drei+postprocessing) | **308.8 KB gz / 1021 KB raw** | code-split out of initial | ✅ deferred, 0 refs in raw HTML |
+| three / canvas in raw server HTML | **absent** (h1 present, `<canvas>` count 0) | 0 refs | ✅ PASS |
+| CLS — motion path (desktop), reduced-motion, phone-class (5 scroll depths each) | **0.0000 / 0.0000 / 0.0000** | ~0 | ✅ PASS |
+| LCP element | **`<h1>` heroHeadline, server-rendered** (in raw HTML, paints pre-hydration) | not canvas-blocked | ✅ correct |
+| LCP time (mobile 390, 4× CPU throttle, swiftshader) | **~384 ms** (UNRELIABLE — no real net throttle, SW-WebGL) | <2.5s mid-mobile | ✅ but caveat hard |
+| FCP / TTFB / load (desktop) | 432 / 121 / 546 ms | — | informational only |
+| Total transfer, full settle (desktop motion path, canvas mounts) | ~1762 KB (1663 JS + 23 CSS + 31 fonts) | — | dominated by the lazy three chunk |
+
+### Fallbacks (all 3 verified — no layout regression)
+- **Motion path** (desktop): `data-choreo=armed`, canvas present, all sections present, **CLS 0**.
+- **Reduced-motion** (desktop): `data-choreo=null`, all sections present, **CLS 0**, no transforms.
+- **Phone-class** (390 + touch): **no canvas** (poster only, LCP protected), all sections present, **CLS 0**.
+
+### A11y smoke (keyboard, desktop + mobile)
+- Tab order is correct & logical: skip-link → wordmark → Work/About/Contact nav → Selected-work →
+  fork radio → name/email/message → submit → GitHub/LinkedIn/Email. Focus-visible ring present on
+  links, radios, submit, social links.
+- Anchor nav: Enter on the `#contact` link lands `#contact` at **top = 0px**, hash updates. ✅
+- Mobile disclosure menu (390): `aria-expanded false→true` on click, panel `#mobile-nav` visible,
+  **Escape closes** (back to false), `aria-controls` wired. ✅
+- Contrast (computed, shipped palette): `--muted` body text **6.08:1** on black (exceeds the
+  documented 4.6:1), `--fg` links **21:1**, submit resting **21:1** (black-on-white) / focus
+  **13.19:1** (black-on-accent). **No AA failures found.**
+
+### Prioritized findings
+- **[P1 → helios + main-thread] GSAP+ScrollTrigger ship in the INITIAL first-load JS, not lazy.**
+  `gsap` + `ScrollTrigger` are referenced eagerly in the raw `/` HTML (chunks `32_-f3kvirmsg.js`
+  26.9 KB gz + `1is0gg5e6lopl.js` 17.1 KB gz ≈ **~44 KB gz of the 233 KB initial**). This is the
+  bulk of the gap vs the Phase-3 "~156 KB gz initial" claim (Phase 4's +46 KB landed in *first-load*,
+  not behind a dynamic import). It is NOT LCP-blocking (h1 is server-rendered, LCP element confirmed),
+  so this is correctness-of-claim + budget hygiene, not a user-visible regression today. **Action:**
+  either (a) update the STATUS claim to the true ~233 KB gz initial, or (b) defer GSAP behind the same
+  motion-gate as the canvas (it's only needed once the user can scroll / on the motion path) so the
+  initial payload drops back toward ~190 KB gz. Recommend (b) if cheap; (a) at minimum — don't leave a
+  stale 156 KB number on record.
+- **[P2 → iris] Text-field focus indicator is color-only (accent border swap), no shape/contrast
+  delta.** `.input/.textarea:focus-visible` sets `border-color: var(--accent)` + a faint bg lift but
+  `outline: none` and no width/box-shadow change. It is *visible*, but a 1px hue change leans on color
+  alone and is borderline for WCAG 2.4.13 (Focus Appearance, AAA) / fragile for low-vision users.
+  Links, radios, and the submit use stronger rings — inputs are the outlier. **Action:** give inputs a
+  matching offset ring or a 2px border + bg so the focus state isn't color-only. Low effort, low risk.
+- **[P2 → helios] Lazy WebGL chunk is 308.8 KB gz in ONE monolithic file.** Correctly deferred (great),
+  but it's a single 1 MB-raw chunk — on a real mid-mobile GPU/network the desktop/tablet motion path
+  pays it in one shot once the canvas decides to mount. Phone-class already skips it (good). **Action
+  (optional, post-Phase-5):** confirm drei imports are tree-shaken to only what `Nodes/Connectors/Bloom`
+  use (drei is import-surface-greedy); a quick check that no unused drei helpers are pulling weight
+  could shave the chunk. Not urgent — it never touches LCP.
+
+### Could NOT measure here (be honest)
+- **Real LCP/TBT/Speed-Index on mid-mobile**: no Lighthouse (sandbox blocked the npx/CDP network path)
+  and no real network throttling — the ~384 ms LCP is software-rendered + un-throttled-network, so
+  treat it as "LCP is the server-rendered h1 and is not WebGL-gated" (structurally correct) rather than
+  a trustworthy millisecond budget. **A real-device or unsandboxed Lighthouse run is still owed** before
+  signing off the <2.5s mobile-LCP budget.
+- **Canvas FPS / TBT from the WebGL loop**: swiftshader makes paint/raster timing meaningless; the
+  agent-loop's main-thread cost on a real GPU is unmeasured here. helios's [REVIEW] real-GPU pass covers
+  the *feel*; a real-device TBT trace would cover the *cost*.
+- Repro scripts: `scripts/ingestion/qa-perf.mjs` (bundle/network/CLS/fallbacks) and
+  `scripts/ingestion/qa-a11y-lcp.mjs` (LCP element + keyboard + menu + contrast). Re-run against a prod
+  build on :3100.
+
 ### Phase 2 TODO(human) — fill the real artifacts  [REVIEW]
 These are the marked gaps left in the content scaffold. The copy around them is real and
 voice-correct; only the artifacts are placeholders (a fabricated link/metric is worse than a

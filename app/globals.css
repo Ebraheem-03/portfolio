@@ -12,6 +12,8 @@
   --border: rgba(255, 255, 255, 0.12);
   --border-strong: rgba(255, 255, 255, 0.24);
   --surface: rgba(255, 255, 255, 0.03);
+  /* Danger — form/error states only. Desaturated coral, ~5.4:1 on black (AA). */
+  --danger: #ff8a7a;
 
   /* --- Accent — LOCKED 2026-06-11 ---------------------------------------- */
   /* Electric cyan/teal. The one accent: focus ring, link underline, the live  */
