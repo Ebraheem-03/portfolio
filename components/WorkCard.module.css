@@ -1,0 +1,193 @@
+/* ============================================================================
+   WorkCard — proof-first case-study container. Barely-there surface lift on the
+   black stage; the structure (problem → architecture → proof) is the design, not
+   decoration. One accent: the live-mark + the link arrow on hover.
+   ========================================================================= */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  padding: var(--space-8);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  transition:
+    border-color var(--dur-micro) var(--ease-out-quart),
+    background-color var(--dur-micro) var(--ease-out-quart);
+}
+.card:hover,
+.card:focus-within {
+  border-color: var(--border-strong);
+  background: rgba(255, 255, 255, 0.045);
+}
+
+/* --- Head: ordered index + title ------------------------------------------ */
+.head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+}
+
+.index {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 300;
+  font-size: var(--text-eyebrow);
+  letter-spacing: var(--track-ui);
+  color: var(--muted-dim);
+  font-variant-numeric: tabular-nums;
+  padding-top: 0.35em;
+  flex: none;
+}
+
+.title {
+  font-size: var(--text-h2);
+  color: var(--fg);
+  max-width: 14ch;
+}
+
+/* --- Body: the two proof fields + stack ----------------------------------- */
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.fieldLabel {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 300;
+  text-transform: uppercase;
+  font-size: var(--text-eyebrow);
+  letter-spacing: var(--track-ui);
+  color: var(--muted);
+}
+
+.problem {
+  font-size: var(--text-lede);
+  line-height: var(--lh-lede);
+  letter-spacing: var(--track-lede);
+  color: var(--fg);
+  max-width: 38ch;
+}
+
+.architecture {
+  font-size: var(--text-body);
+  line-height: var(--lh-body);
+  color: var(--muted);
+  max-width: 52ch;
+}
+
+/* --- Stack chips ----------------------------------------------------------- */
+.stack {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+
+.chip {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 400;
+  font-size: var(--text-label);
+  letter-spacing: var(--track-ui-tight);
+  color: var(--muted);
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+/* --- Proof links ----------------------------------------------------------- */
+.links {
+  margin-top: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--border);
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 500;
+  font-size: var(--text-label);
+  text-transform: uppercase;
+  letter-spacing: var(--track-ui-tight);
+  color: var(--fg);
+  transition: color var(--dur-micro) var(--ease-out-quart);
+}
+.link:hover,
+.link:focus-visible {
+  color: var(--accent);
+}
+.arrow {
+  display: inline-block;
+  transition: transform var(--dur-micro) var(--ease-out-expo);
+}
+.link:hover .arrow,
+.link:focus-visible .arrow {
+  transform: translateX(4px);
+}
+
+/* The single live mark — a glowing accent dot. Never a flat fill block. */
+.liveMark {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 70%, transparent);
+  animation: livePulse 2.4s var(--ease-in-out) infinite;
+  flex: none;
+}
+@keyframes livePulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 55%, transparent);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 7px transparent;
+  }
+}
+
+/* Pending proof slot — honest "soon", not a dead link. */
+.linkPending {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 400;
+  font-size: var(--text-label);
+  text-transform: uppercase;
+  letter-spacing: var(--track-ui-tight);
+  color: var(--muted);
+  cursor: default;
+}
+.pendingTag {
+  font-size: var(--text-eyebrow);
+  letter-spacing: var(--track-ui-tight);
+  color: var(--muted-dim);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 2px var(--space-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .liveMark {
+    animation: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .card {
+    padding: var(--space-6);
+  }
+}

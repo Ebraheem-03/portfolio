@@ -37,9 +37,7 @@ The taste signals judgment — worth more than seniority claims for an early-car
 The canonical source for any name, link, or handle that ships. Keep these consistent everywhere.
 - **Display name:** Ebraheem Gillani (confirmed correct).
 - **GitHub:** `Ebraheem-03` → https://github.com/Ebraheem-03 (use this for every GitHub link).
-- **LinkedIn:** `TODO(linkedin)` — URL not yet provided. Do NOT invent one. Leave the marker until
-  the human supplies it; any contact/footer social link must keep the `TODO(linkedin)` placeholder
-  rather than guessing.
+- **LinkedIn:** https://www.linkedin.com/in/ebraheemgillani/ (confirmed 2026-06-12). Use this for every LinkedIn link.
 - **Retired:** the provisional `ebraheem.builds` handle was invented and is dropped. Do not reuse it.
 
 ## Wordmark
