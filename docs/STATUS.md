@@ -3,7 +3,31 @@
 Heartbeat doc. Every agent updates this after a unit of work.
 Tags: `[AFK]` safe unattended · `[REVIEW]` needs the human.
 
-## Now (current phase: 4 — scroll choreography — DONE; awaiting Phase 5)
+## Now (current phase: 5 — case-study pages — DONE; awaiting review)
+
+### Phase 5 — case-study pages (iris, 2026-06-12)  [REVIEW]
+Dedicated `app/work/[slug]` case studies built against the locked tokens. Files:
+- `app/work/[slug]/page.tsx` — server component. `generateStaticParams` (all 3 slugs),
+  `generateMetadata` (real per-case title + thesis description), `notFound()` for unknown slugs.
+  Spine: hero (index + title + thesis + status-driven proof line + links) → problem → architecture
+  (diagram + visible summary figcaption) → decisions → outcome (+ metrics) → clamped prev/next nav.
+- `app/work/[slug]/page.module.css` — label-left / prose-right grid echoing the home About section;
+  reuses the WorkCard `.liveMark`; private/pending statuses render an honest hollow ring, never a
+  fake live dot. Tokens only.
+- `components/work/ArchitectureDiagram.tsx` + `.module.css` — server SVG node-graph (the agent-loop
+  motif). Lays nodes on the col/row grid, draws directed edges with labels, accent nodes get the one
+  cyan treatment + a connector dot (monogram echo). `role="img"` + `<title>`/`<desc>` from
+  `diagram.summary`, and the same summary ships as a visible figcaption.
+
+Verify: `tsc --noEmit` clean; `next build` succeeds, all 3 slugs prerender SSG. Routes:
+`/work/{agentic-commerce,resume-analyzer,ministry-platform}` → 200, `/work/nonsense` → 404.
+Verified visually desktop (1440) + mobile (390). No `lib/work.ts` / token edits.
+
+**Honest gaps left (never fabricated):** resume-analyzer's "Open the live app" (null href) and all
+null `metrics` values render as marked `TODO(human)` chips; private/pending statuses render honestly.
+The em dashes visible in case-study prose come from `lib/work.ts` (locked data), not iris copy.
+
+
 
 ## Perf/QA — early pass (vesper, 2026-06-12)  [REVIEW]
 Production build (`next build`, Turbopack) + `next start -p 3100`, measured with playwright-core
