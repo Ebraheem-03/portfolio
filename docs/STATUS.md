@@ -3,7 +3,7 @@
 Heartbeat doc. Every agent updates this after a unit of work.
 Tags: `[AFK]` safe unattended · `[REVIEW]` needs the human.
 
-## Now (current phase: 3 — WebGL hero & signature moment — DONE; awaiting Phase 4)
+## Now (current phase: 4 — scroll choreography — DONE; awaiting Phase 5)
 
 ### Phase 2 TODO(human) — fill the real artifacts  [REVIEW]
 These are the marked gaps left in the content scaffold. The copy around them is real and
@@ -64,10 +64,52 @@ marked gap). Each is a `TODO(human)` in code:
 - (none — Phase 2 deliverables complete pending the TODO(human) artifacts above)
 
 ### Up next  [AFK]
-- [ ] Phase 4 (helios + iris): scroll choreography. Sync the in-canvas loop / camera to Lenis
-      scroll progress (the `progress` ref in `HeroScene` is already the single source of truth for
-      the loop head — Phase 4 can drive it from scroll instead of/in addition to the wall clock).
-      Stagger + parallax + section transitions.
+- [ ] Phase 5 (iris): case studies. Interactive where it earns it; proof-first.
+
+## Done — Phase 4 scroll choreography (helios, 2026-06-12)  [AFK]
+GSAP ScrollTrigger layered onto the existing Lenis instance. Motion only — no content/DS/backend
+changes. `npm run build` passes clean.
+
+**GSAP+Lenis sync (once, in `lib/SmoothScroll.tsx`):** `lenis.on("scroll", ScrollTrigger.update)`
++ `gsap.ticker` drives `lenis.raf` (ONE rAF for both libs; removed the old standalone rAF loop) +
+`gsap.ticker.lagSmoothing(0)`. A `ScrollTrigger.refresh()` after layout settles. Whole block is
+gated on reduced-motion (never instantiated when reduced).
+
+**Choreography (`components/ScrollChoreography.tsx`, renders no DOM, hooks via data-attrs):**
+- HERO: grouped-line entrance on load (eyebrow→headline→sub, 90ms stagger, expo.out, 1.2s). On
+  scroll-out the content parallaxes up + fades (scrub, transform/opacity only).
+- WORK: section head reveals in reading order (90ms); cards stagger up from a deeper offset (60ms),
+  `once:true` so they never re-hide.
+- ABOUT / CONTACT: head+prose reveal as grouped moves on enter.
+- All reveals are opacity + translateY ONLY → CLS ~0, no layout thrash.
+
+**Signature moment tied to scroll (`lib/scrollSignal.ts` + `HeroScene.tsx`):** a module-singleton
+ref (no React re-render) carries `heroExit` 0→1, written by a scrubbed ScrollTrigger on the hero,
+read every frame by `HeroScene`. As the hero leaves: the agent loop ACCELERATES (extra cycles,
+`EXIT_LOOP_GAIN`) — the graph reads as "firing harder" as you depart its station — and the graph
+RECEDES in z + lifts. Layered as an OFFSET on the existing idle drift (didn't touch the shaders or
+the `progress` loop math beyond adding the exit term).
+
+**Reduced-motion:** ScrollChoreography no-ops entirely; the hidden initial states live behind
+`html[data-choreo="armed"]` which is set ONLY from JS on the motion path → no-JS/reduced-motion
+content is fully present, no transforms. `heroExit` stays 0 (publisher never wired) so the canvas
+runs its still/idle path untouched. Verified headless (`reducedMotion:'reduce'` → `data-choreo=null`,
+0 errors, all section content visible at every scroll depth).
+
+**Keyboard/anchor nav:** ScrollTrigger only observes; Lenis owns anchor smoothing. Verified: clicking
+Contact lands `#contact` at top=0px, hash updates, no focus trap / tab-order change.
+
+**Bundle delta (gsap):** gsap core ~28KB gz + ScrollTrigger ~18KB gz ≈ **~46KB gz** of new client
+JS. NOT LCP-blocking (hero headline is server-rendered, paints pre-hydration). The three.js chunk
+(~309KB gz) stays code-split — confirmed 0 refs in initial page HTML (Phase 3 LCP work intact).
+
+**Verify script:** `scripts/ingestion/shot-scroll.mjs` (6 scroll depths × motion+reduced + anchor
+check). PNGs in `scripts/ingestion/scroll-shots/`.
+
+[REVIEW] (GPU-only / real-scroll): exit-loop acceleration + graph recede read as STRUCTURE in
+swiftshader shots but the *feel* (how aggressive the speed-up + how far the recede should go before
+it gets distracting) wants a real-GPU + real-inertia eye. `EXIT_LOOP_GAIN=1.6`, `EXIT_Z=-3.4`,
+`EXIT_Y=1.1` in `HeroScene.tsx` are tunable; current values are conservative.
 
 ## Done — Phase 3 WebGL hero & signature moment (helios, 2026-06-12)  [AFK]
 **The signature moment = a literal agent reasoning/acting loop.** Four stage-clusters

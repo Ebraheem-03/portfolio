@@ -193,6 +193,28 @@ a {
 }
 
 /* ============================================================================
+   Scroll choreography — reveal initial states (Phase 4, helios).
+
+   Hidden state is applied ONLY when JS has confirmed motion is on and armed the
+   triggers (<html data-choreo="armed">). With no-JS, reduced-motion, or before
+   the script runs, [data-reveal] is fully visible — content is never gated
+   behind a transform that might not fire (DESIGN-SYSTEM.md reduced-motion rule
+   #4, also protects SSR/headless). GSAP animates transform+opacity only, so
+   reveals never shift layout (CLS ~ 0).
+   ========================================================================= */
+html[data-choreo="armed"] [data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+  will-change: transform, opacity;
+}
+/* Work cards enter from a touch deeper for a layered, parallaxed feel. */
+html[data-choreo="armed"] [data-work-grid] > * {
+  opacity: 0;
+  transform: translate3d(0, 40px, 0);
+  will-change: transform, opacity;
+}
+
+/* ============================================================================
    Reduced motion — kills heavy transforms, keeps opacity. Lenis is disabled in
    JS by the ReducedMotionProvider; this is the CSS backstop.
    ========================================================================= */
