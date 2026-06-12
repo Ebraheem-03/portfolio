@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 220" width="720" height="220" role="img" aria-label="Ebraheem Gillani">
+  <!--
+    DIRECTION 1: FULL-NAME WORDMARK
+    The voice face (Anton, ultra-condensed) set as the literal name, stacked two
+    lines, tight leading, with a single cyan accent: a node + connector that
+    reads as the agent-graph motif compressed into a mark. Text is uppercase
+    literal (no CSS text-transform, so it renders when embedded via img in
+    secure-static mode). Pure black; white type; one accent (var accent #23E6C4).
+  -->
+  <rect width="720" height="220" fill="#000000"/>
+  <text x="56" y="98" font-family="Anton, Impact, sans-serif" font-size="88"
+        letter-spacing="-1" fill="#FFFFFF">EBRAHEEM</text>
+  <text x="56" y="186" font-family="Anton, Impact, sans-serif" font-size="88"
+        letter-spacing="-1" fill="#FFFFFF">GILLANI</text>
+  <line x1="60" y1="124" x2="60" y2="160" stroke="#23E6C4" stroke-width="3"/>
+  <circle cx="60" cy="124" r="5" fill="#23E6C4"/>
+</svg>

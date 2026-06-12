@@ -1,0 +1,17 @@
+node_modules/
+.next/
+dist/
+.env
+.env.local
+*.log
+.DS_Store
+# never commit MCP keys / machine-local settings
+.claude/.credentials
+.claude/settings.local.json
+
+# Next.js auto-generated
+next-env.d.ts
+
+# reference-ingestion outputs: large + reproducible from scripts/ingestion/*.mjs
+scripts/ingestion/out/
+scripts/ingestion/app-shots/

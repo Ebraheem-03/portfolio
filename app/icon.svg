@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240" role="img" aria-label="Ebraheem Gillani">
+  <!-- EG monogram favicon. Vector paths (Anton EG), node-and-connector accent.
+       Colors are hard-coded (favicons can't read CSS vars): black tile, white
+       glyphs, cyan #23E6C4 node. Kept in sync with components/Wordmark.tsx. -->
+  <rect width="240" height="240" rx="40" fill="#000000"/>
+  <path fill="#FFFFFF" d="M59.28 156.00V24.00H112.08V49.50H86.13V75.23H111.03V100.05H86.13V130.28H113.81V156.00Z"/>
+  <path fill="#FFFFFF" d="M143.59 157.20Q115.32 157.20 115.32 116.70V59.78Q115.32 22.80 147.72 22.80Q161.07 22.80 168.19 28.16Q175.32 33.53 178.02 43.80Q180.72 54.08 180.72 68.85H154.92V57.15Q154.92 52.88 153.75 49.99Q152.59 47.10 148.92 47.10Q144.34 47.10 142.88 50.18Q141.42 53.25 141.42 56.92V120.90Q141.42 126.22 142.80 129.56Q144.19 132.90 148.24 132.90Q152.44 132.90 153.83 129.56Q155.22 126.22 155.22 120.75V101.93H148.17V79.12H180.42V156.00H169.84L165.34 144.90Q158.44 157.20 143.59 157.20Z"/>
+  <line x1="150" y1="183" x2="184" y2="183" stroke="#23E6C4" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="184" cy="183" r="7" fill="#23E6C4"/>
+</svg>
