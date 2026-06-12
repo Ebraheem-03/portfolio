@@ -4,12 +4,14 @@ import { WorkCard } from "@/components/WorkCard";
 import { ContactForm } from "@/components/ContactForm";
 import { SocialLinks } from "@/components/SocialLinks";
 import { HeroExperience } from "@/components/HeroExperience";
+import { ScrollChoreography } from "@/components/ScrollChoreography";
 import { WORK } from "@/lib/work";
 import styles from "./page.module.css";
 
 export default function Home() {
   return (
     <>
+      <ScrollChoreography />
       <SiteHeader />
 
       <main id="main">
@@ -19,7 +21,11 @@ export default function Home() {
             BEHIND this white HTML overlay (--z-ui). The static state must
             already read like the bar; the canvas only deepens it.
             =================================================================== */}
-        <section className={styles.hero} aria-labelledby="hero-headline">
+        <section
+          className={styles.hero}
+          aria-labelledby="hero-headline"
+          data-hero
+        >
           {/*
             >>> PHASE 3 CANVAS MOUNT SLOT <<<
             helios: mount the full-bleed R3F <canvas> as a child of this div.
@@ -31,13 +37,19 @@ export default function Home() {
             <HeroExperience />
           </div>
 
-          <div className={styles.heroInner}>
-            <p className={styles.heroMark}>Ebraheem Gillani · AI Engineer</p>
-            <h1 id="hero-headline" className={`display ${styles.heroHeadline}`}>
+          <div className={styles.heroInner} data-hero-content>
+            <p className={styles.heroMark} data-reveal>
+              Ebraheem Gillani · AI Engineer
+            </p>
+            <h1
+              id="hero-headline"
+              className={`display ${styles.heroHeadline}`}
+              data-reveal
+            >
               I build agents that take actions, not chatbots that answer
               questions.
             </h1>
-            <p className={styles.heroSub}>
+            <p className={styles.heroSub} data-reveal>
               Multi-agent architecture, real tool use, shipped. The work is
               below; each one a problem, an architecture, and the deployed thing
               you can open.
@@ -63,19 +75,25 @@ export default function Home() {
           aria-labelledby="work-title"
         >
           <div className={styles.sectionInner}>
-            <header className={styles.sectionHead}>
-              <p className={styles.chapterMark}>Selected work</p>
-              <h2 id="work-title" className={`display ${styles.sectionTitle}`}>
+            <header className={styles.sectionHead} data-reveal-group>
+              <p className={styles.chapterMark} data-reveal>
+                Selected work
+              </p>
+              <h2
+                id="work-title"
+                className={`display ${styles.sectionTitle}`}
+                data-reveal
+              >
                 Things I shipped that do something.
               </h2>
-              <p className={styles.sectionLede}>
+              <p className={styles.sectionLede} data-reveal>
                 Three systems. Each one starts with a real problem, shows the
                 architecture, and ends at the deployed thing. No demos that only
                 work on the happy path.
               </p>
             </header>
 
-            <div className={styles.workGrid}>
+            <div className={styles.workGrid} data-work-grid>
               {WORK.map((item) => (
                 <WorkCard key={item.id} item={item} />
               ))}
@@ -92,31 +110,34 @@ export default function Home() {
           aria-labelledby="about-title"
         >
           <div className={styles.sectionInner}>
-            <div className={styles.aboutLayout}>
+            <div className={styles.aboutLayout} data-reveal-group>
               <header className={styles.sectionHead}>
-                <p className={styles.chapterMark}>About</p>
+                <p className={styles.chapterMark} data-reveal>
+                  About
+                </p>
                 <h2
                   id="about-title"
                   className={`display ${styles.sectionTitle}`}
+                  data-reveal
                 >
                   The work argues for itself.
                 </h2>
               </header>
 
               <div className={styles.aboutBody}>
-                <p className={styles.aboutLead}>
+                <p className={styles.aboutLead} data-reveal>
                   I&apos;m an AI engineer. I build systems where a model
                   doesn&apos;t just answer: it plans, calls tools, and changes
                   something in the world, then reasons over what came back.
                 </p>
-                <p className={styles.aboutText}>
+                <p className={styles.aboutText} data-reveal>
                   Early career, and I won&apos;t pretend otherwise. Instead of a
                   title, here&apos;s the record: a multi-agent commerce platform
                   that takes real actions, an AI app running live on Hugging
                   Face Spaces, and a production RAG platform for a government
                   ministry built to survive a schema that keeps moving.
                 </p>
-                <p className={styles.aboutText}>
+                <p className={styles.aboutText} data-reveal>
                   I care about the parts that don&apos;t demo well: what happens
                   when a tool call fails, when retrieval returns nothing, when
                   the agent picks the wrong step. That&apos;s where shipped and
@@ -137,16 +158,19 @@ export default function Home() {
           aria-labelledby="contact-title"
         >
           <div className={styles.sectionInner}>
-            <div className={styles.contactLayout}>
+            <div className={styles.contactLayout} data-reveal-group>
               <header className={styles.sectionHead}>
-                <p className={styles.chapterMark}>Contact</p>
+                <p className={styles.chapterMark} data-reveal>
+                  Contact
+                </p>
                 <h2
                   id="contact-title"
                   className={`display ${styles.sectionTitle}`}
+                  data-reveal
                 >
                   Hiring, or got a project?
                 </h2>
-                <p className={styles.sectionLede}>
+                <p className={styles.sectionLede} data-reveal>
                   Same inbox, different framing. Pick one, and I&apos;ll know how
                   to read your message.
                 </p>

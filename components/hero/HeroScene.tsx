@@ -24,8 +24,15 @@ import * as THREE from "three";
 import { buildAgentGraph } from "./agentGraph";
 import { Connectors } from "./Connectors";
 import { Nodes } from "./Nodes";
+import { getHeroExit } from "@/lib/scrollSignal";
 
 const LOOP_SECONDS = 9;
+// How much the loop accelerates as the hero scrolls out (extra cycles over the
+// full exit) — the agent visibly "fires faster" as you leave its station.
+const EXIT_LOOP_GAIN = 1.6;
+// Graph recede: pushed back in z + a small lift as the camera leaves the hero.
+const EXIT_Z = -3.4;
+const EXIT_Y = 1.1;
 // reduced-motion still: park mid-ACTION so a stage is visibly ignited.
 const STILL_PHASE = 0.42;
 // base vertical offset of the graph group (drift adds to this).
@@ -48,12 +55,25 @@ export function HeroScene({
   useFrame((state) => {
     if (!still) {
       const t = state.clock.elapsedTime;
-      progress.current = (t / LOOP_SECONDS) % 1;
+
+      // Scroll drives the signature moment: as the hero exits (0→1), the agent
+      // loop runs FASTER (extra cycles) — the graph reads as "firing harder" the
+      // moment you start to leave it, then recedes. Read from the module ref so
+      // scroll never re-renders the canvas. exit stays 0 with reduced-motion
+      // (publisher unwired) → this collapses to the pure idle loop.
+      const exit = getHeroExit();
+      progress.current = (t / LOOP_SECONDS + exit * EXIT_LOOP_GAIN) % 1;
 
       if (group.current) {
-        // lazy ambient drift — never busy, just alive.
+        // Base placement + lazy ambient drift (add to base, never overwrite it),
+        // then layer the scroll recede on top: graph pushes back in z and lifts
+        // as the camera leaves the hero station.
         group.current.rotation.z = Math.sin(t * 0.12) * 0.05;
-        group.current.position.y = BASE_Y + Math.sin(t * 0.18) * 0.12;
+        group.current.position.x = BASE_X;
+        group.current.position.y =
+          BASE_Y + Math.sin(t * 0.18) * 0.12 + exit * EXIT_Y;
+        group.current.position.z = exit * EXIT_Z;
+
         // soft pointer parallax (a few degrees), eased toward target.
         const tx = pointer.y * 0.12;
         const ty = pointer.x * 0.18;

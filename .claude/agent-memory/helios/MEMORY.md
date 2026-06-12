@@ -76,6 +76,31 @@ the shaders.
   `getContext('webgl*')` + deletes `window.WebGLRenderingContext`; and a 390/coarse mobile context.
   Script: `scripts/ingestion/shot-fallbacks.mjs` (+ `shot-app.mjs` for the live hero).
 
+## GSAP + Lenis + ScrollTrigger sync (Phase 4) — do it ONCE, cleanly
+- **One rAF for both libs.** Drive `lenis.raf` from `gsap.ticker.add` (ticker time is SECONDS →
+  `lenis.raf(time*1000)`), and `lenis.on("scroll", ScrollTrigger.update)`. Do NOT keep a second
+  standalone `requestAnimationFrame` loop for Lenis — two rAFs and GSAP tweens drift out of phase
+  with the smoothed scroll. I removed the old SmoothScroll rAF when I added the ticker.
+- **`gsap.ticker.lagSmoothing(0)`** — GSAP's lag-catchup teleports tweens after a stall; Lenis
+  already smooths, so disable it or scrubbed triggers jump.
+- **`ScrollTrigger.refresh()` after layout settles** (and again on `document.fonts.ready`) — Anton
+  vs fallback metrics shift trigger start/end; without a refresh, reveals fire at the wrong scroll.
+- **Bridge WebGL↔scroll via a module singleton, NOT React.** `lib/scrollSignal.ts` holds `heroExit`
+  in a plain module ref; a scrubbed ScrollTrigger writes it, `HeroScene` reads it in `useFrame`. The
+  canvas NEVER re-renders on scroll. With reduced-motion the publisher is never wired so it stays 0
+  and the scene math collapses to idle — verify that path (it's why the still hero is untouched).
+- **Drive the loop from scroll = ADD a term, don't replace the clock.** `progress.current =
+  (t/LOOP + exit*GAIN) % 1` — keeps idle alive AND accelerates on exit. Same "add to base, never
+  overwrite" trap as the group-drift one above: I set position.x/y/z explicitly each frame now
+  (base + idle + exit-offset) so the exit recede layers on the drift instead of fighting it.
+- **Reveal initial states must be JS-armed, never CSS-default.** Hidden state (`opacity:0;
+  translateY`) lives behind `html[data-choreo="armed"]`, set ONLY by the choreography component on
+  the motion path. No-JS / reduced-motion / pre-hydration → content is visible (never gated behind
+  a transform that might not fire; also keeps SSR/headless shots correct). Transform+opacity only →
+  CLS ~0. `gsap.context()` + `ctx.revert()` on unmount restores inline styles and kills triggers.
+- **Anchor nav still works** with Lenis owning smoothing; ScrollTrigger only observes. Verified
+  click→`#contact` lands at top=0. ScrollTrigger does NOT trap focus or reorder tabs.
+
 ## Software-WebGL screenshot caveat (still true in Phase 3)
 Headless Chromium renders via swiftshader: dim, aliased, **no real bloom** — bright node cores show
 but don't smear into glow. Good enough to confirm the canvas MOUNTS, COMPOSITES behind the UI, and
