@@ -27,13 +27,19 @@ export async function generateMetadata({
   const item = getWorkBySlug(slug);
   if (!item) return {}; // unknown slug → the page calls notFound()
 
-  const title = `${item.title} · Ebraheem Gillani`;
+  // Bare title — the root layout's title.template appends "· Ebraheem Gillani".
   const description = item.detail.thesis;
 
   return {
-    title,
+    title: item.title,
     description,
-    openGraph: { title, description, type: "article" },
+    alternates: { canonical: `/work/${item.slug}` },
+    openGraph: {
+      title: `${item.title} · Ebraheem Gillani`,
+      description,
+      type: "article",
+      url: `/work/${item.slug}`,
+    },
   };
 }
 
