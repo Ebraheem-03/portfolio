@@ -243,6 +243,35 @@
   color: var(--accent);
 }
 
+/* Honeypot — off-screen + out of tab order; not display:none so bots that skip
+   hidden fields still fill it. Real users never see or reach it. */
+.honeypot {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.submit:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+.submit:disabled:hover {
+  background: var(--fg);
+  border-color: var(--fg);
+  color: var(--bg);
+}
+
+.error {
+  margin: 0;
+  min-height: 1.2em;
+  color: var(--danger);
+  font-size: var(--text-label);
+}
+
 @media (max-width: 768px) {
   .row {
     flex-direction: column;

@@ -29,21 +29,51 @@ const FRAMING: Record<Intent, { lead: string; messageHint: string }> = {
   },
 };
 
+type Status = "idle" | "sending" | "sent" | "error";
+
 export function ContactForm() {
   const [intent, setIntent] = useState<Intent>("hiring");
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<Status>("idle");
+  const [error, setError] = useState<string | null>(null);
 
   const nameId = useId();
   const emailId = useId();
   const messageId = useId();
   const messageHintId = useId();
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    // TODO(human / Phase 6): POST to the serverless contact endpoint.
-    // Intentionally a no-op stub — no network, no fake success toast that
-    // implies a message was sent. We only reflect that the form was completed.
-    setSubmitted(true);
+    if (status === "sending") return;
+
+    const form = e.currentTarget;
+    const fd = new FormData(form);
+    const payload = {
+      name: fd.get("name"),
+      email: fd.get("email"),
+      message: fd.get("message"),
+      intent: fd.get("intent"),
+      company: fd.get("company"), // honeypot
+    };
+
+    setStatus("sending");
+    setError(null);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const json = (await res.json().catch(() => null)) as { ok?: boolean; error?: string } | null;
+      if (res.ok && json?.ok) {
+        setStatus("sent");
+      } else {
+        setStatus("error");
+        setError(json?.error || "Something went wrong. Try the direct links below.");
+      }
+    } catch {
+      setStatus("error");
+      setError("Network error. Try the direct links below.");
+    }
   }
 
   return (
@@ -74,23 +104,35 @@ export function ContactForm() {
         </p>
       </fieldset>
 
-      {submitted ? (
+      {status === "sent" ? (
         <div className={styles.done} role="status" aria-live="polite">
-          <p className={`display ${styles.doneTitle}`}>Almost.</p>
+          <p className={`display ${styles.doneTitle}`}>Sent.</p>
           <p className={styles.doneBody}>
-            The form works; the inbox behind it lands in the next build phase.
-            Until then, reach me directly on the links below.
+            {intent === "hiring"
+              ? "Got it. I'll reply from my inbox — usually within a day."
+              : "Got the brief. I'll come back with questions, not a sales pitch."}
           </p>
           <button
             type="button"
             className={styles.reset}
-            onClick={() => setSubmitted(false)}
+            onClick={() => setStatus("idle")}
           >
-            Edit your message
+            Send another
           </button>
         </div>
       ) : (
         <form className={styles.form} onSubmit={handleSubmit} noValidate>
+          {/* Honeypot — visually hidden, off the tab order; bots fill it, humans don't. */}
+          <div aria-hidden="true" className={styles.honeypot}>
+            <label htmlFor="company-website">Company (leave blank)</label>
+            <input
+              id="company-website"
+              name="company"
+              type="text"
+              tabIndex={-1}
+              autoComplete="off"
+            />
+          </div>
           <div className={styles.row}>
             <div className={styles.field}>
               <label htmlFor={nameId} className={styles.label}>
@@ -140,12 +182,20 @@ export function ContactForm() {
             </p>
           </div>
 
-          <button type="submit" className={styles.submit}>
-            {intent === "hiring" ? "Send the role" : "Send the brief"}
+          <button type="submit" className={styles.submit} disabled={status === "sending"}>
+            {status === "sending"
+              ? "Sending…"
+              : intent === "hiring"
+                ? "Send the role"
+                : "Send the brief"}
             <span className={styles.submitArrow} aria-hidden="true">
               →
             </span>
           </button>
+
+          <p className={styles.error} role="alert" aria-live="assertive">
+            {status === "error" ? error : ""}
+          </p>
         </form>
       )}
     </div>
